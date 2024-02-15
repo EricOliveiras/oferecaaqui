@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Entity(name = "users")
+@Entity
 @Table(name = "users")
 public class User {
   @Id
