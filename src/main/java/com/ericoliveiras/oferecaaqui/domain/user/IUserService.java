@@ -9,5 +9,7 @@ import java.util.UUID;
 public interface IUserService {
   UserResponse create(CreateUserRequest createUserRequest);
   UserResponse find(UUID id);
+  UserResponse findByEmail(String email);
+  UserResponse findByDocumentID(String documentID);
   List<UserResponse> findAll();
 }
