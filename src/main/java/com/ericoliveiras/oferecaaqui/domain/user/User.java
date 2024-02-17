@@ -1,8 +1,12 @@
 package com.ericoliveiras.oferecaaqui.domain.user;
 
+import com.ericoliveiras.oferecaaqui.domain.service.Service;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -10,15 +14,18 @@ import java.util.UUID;
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  public UUID id;
-  public String fullName;
+  private UUID id;
+  private String fullName;
   @Column(unique = true)
-  public String email;
+  private String email;
   @Column(unique = true)
-  public String documentID;
-  public String password;
-  public LocalDate createdAt;
-  public LocalDate updatedAt;
+  private String documentID;
+  private String password;
+  @JsonIgnore
+  @OneToMany(mappedBy = "user")
+  private final List<Service> services = new ArrayList<>();
+  private LocalDate createdAt;
+  private LocalDate updatedAt;
 
   @PrePersist
   protected void onCreate() {
