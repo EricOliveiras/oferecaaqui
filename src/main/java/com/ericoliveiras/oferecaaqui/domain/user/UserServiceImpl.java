@@ -28,13 +28,24 @@ public class UserServiceImpl implements IUserService {
   @Override
   public UserResponse create(CreateUserRequest createUserRequest) {
     User user = userMapper.toEntity(createUserRequest);
-    user.password = hashPassword(user.getPassword());
+    String hashedPassword =  hashPassword(user.getPassword());
+    user.setPassword(hashedPassword);
     return userMapper.toDto(userRepository.save(user));
   }
 
   @Override
   public UserResponse find(UUID id) {
     return userMapper.toDto(findUser(id));
+  }
+
+  @Override
+  public UserResponse findByEmail(String email) {
+    return userMapper.toDto(findUserByEmail(email));
+  }
+
+  @Override
+  public UserResponse findByDocumentID(String documentID) {
+    return userMapper.toDto(findUserByDocumentID(documentID));
   }
 
   @Override
@@ -54,6 +65,13 @@ public class UserServiceImpl implements IUserService {
       .orElseThrow(
         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
       );
+  }
+
+  private User findUserByEmail(String email) {
+    return userRepository.findByEmail(email);
+  }
+  private User findUserByDocumentID(String documentID) {
+    return userRepository.findByDocumentID(documentID);
   }
 
   private String hashPassword(String password) {
