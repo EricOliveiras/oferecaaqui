@@ -1,5 +1,6 @@
 package com.ericoliveiras.oferecaaqui.domain.user;
 
+import com.ericoliveiras.oferecaaqui.config.error.CustomException;
 import com.ericoliveiras.oferecaaqui.domain.user.payload.request.CreateUserRequest;
 import com.ericoliveiras.oferecaaqui.domain.user.payload.response.UserResponse;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,12 @@ public class UserController {
 
   @PostMapping
   public ResponseEntity<UserResponse> create(@RequestBody CreateUserRequest createUserRequest) {
+    if (
+      service.findByEmail(createUserRequest.email) != null
+        || service.findByDocumentID(createUserRequest.documentID) != null
+    ) {
+      throw new CustomException("User already exists", HttpStatus.CONFLICT);
+    }
     UserResponse userResponse = service.create(createUserRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
   }
